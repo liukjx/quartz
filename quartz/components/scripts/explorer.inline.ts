@@ -214,7 +214,15 @@ async function setupExplorer(currentSlug: FullSlug) {
 
       fragment.appendChild(node)
     }
-    explorerUl.insertBefore(fragment, explorerUl.firstChild)
+    // Clear old content first to prevent duplication on SPA navigation
+    // Keep the overflow-end sentinel used by OverflowList
+    while (explorerUl.firstChild) {
+      explorerUl.removeChild(explorerUl.firstChild)
+    }
+    explorerUl.appendChild(fragment)
+    const overflowEnd = document.createElement('li')
+    overflowEnd.className = 'overflow-end'
+    explorerUl.appendChild(overflowEnd)
 
     // restore explorer scrollTop position if it exists
     const scrollTop = sessionStorage.getItem("explorerScrollTop")
